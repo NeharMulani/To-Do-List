@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>To-Do List </title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(120deg, #89f7fe, #66a6ff);
+      background-size: 200% 200%;
+      animation: gradientShift 10s ease infinite;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .todo-container {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(14px);
+      border-radius: 20px;
+      padding: 30px;
+      width: 100%;
+      max-width: 550px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .input-group input,
+    .input-group button {
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+    }
+
+    #taskInput {
+      flex: 2;
+    }
+
+    #startTime,
+    #endTime {
+      flex: 1;
+    }
+
+    #addButton {
+      background-color: #00b894;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    #addButton:hover {
+      background-color: #019875;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      background: #ffffffdd;
+      margin: 10px 0;
+      padding: 12px 14px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: transform 0.2s ease;
+    }
+
+    li:hover {
+      transform: scale(1.02);
+    }
+
+    li span {
+      display: block;
+    }
+
+    .delete {
+      background-color: #ff4757;
+      border: none;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .delete:hover {
+      background-color: #e84118;
+    }
+
+    input[type="text"]::-webkit-calendar-picker-indicator {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="todo-container">
+    <h2>📝 To-Do List </h2>
+    <div class="input-group">
+      <input type="text" id="taskInput" placeholder="Enter a task..." /><br>
+      <input type="text" id="startTime" placeholder="Start (e.g., 09:00)" /><br>
+      <input type="text" id="endTime" placeholder="End (e.g., 17:30)" />
+      <button id="addButton">Add</button>
+    </div>
+    <ul id="taskList"></ul>
+  </div>
+
+  <script>
+    const addButton = document.getElementById('addButton');
+    const taskInput = document.getElementById('taskInput');
+    const taskList = document.getElementById('taskList');
+    const startTimeInput = document.getElementById('startTime');
+    const endTimeInput = document.getElementById('endTime');
+
+    function addTask() {
+      const taskText = taskInput.value.trim();
+      const startTime = startTimeInput.value.trim();
+      const endTime = endTimeInput.value.trim();
+
+      if (!taskText) {
+        alert("Please enter a task.");
+        return;
+      }
+
+      const li = document.createElement('li');
+
+      const textSpan = document.createElement('span');
+      let timeInfo = '';
+      if (startTime || endTime) {
+        timeInfo = `<br><small>🕒 ${startTime || '--:--'} - ${endTime || '--:--'}</small>`;
+      }
+
+      textSpan.innerHTML = `<strong>${taskText}</strong>${timeInfo}`;
+
+      const delBtn = document.createElement('button');
+      delBtn.textContent = 'Delete';
+      delBtn.className = 'delete';
+      delBtn.onclick = () => taskList.removeChild(li);
+
+      li.appendChild(textSpan);
+      li.appendChild(delBtn);
+      taskList.appendChild(li);
+
+      taskInput.value = '';
+      startTimeInput.value = '';
+      endTimeInput.value = '';
+      taskInput.focus();
+    }
+
+    addButton.addEventListener('click', addTask);
+    taskInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') addTask();
+    });
+
+    window.onload = () => taskInput.focus();
+  </script>
+
+</body>
+</html>
